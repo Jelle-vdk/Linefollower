@@ -17,5 +17,5 @@ Minimale hard- en software waarmee aangetoond wordt dat duplex kan gecommuniceer
 1. Schakel de ESP32 in.
 2. Maak met de smartphone of laptop verbinding met het Wi-Fi-netwerk `Robot-AP`.
 3. Open een browser en surf naar `http://192.168.4.1`.
-4. Gebruik de interface om een commando te versturen en controleer de ontvangen statusdata op het scherm en in de seriële monitor.
+4. Gebruik de interface om de ingebouwde LED op de microcontroller aan en uit te zetten.
 
