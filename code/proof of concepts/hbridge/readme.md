@@ -14,7 +14,9 @@ Voor de aansturing van de twee N20 motoren wordt gebruikgemaakt van de **DRV8833
 #### Implementatie & Testdoel
 De vier ingangen worden aangesloten op PWM-compatibele GPIO-pinnen van de ESP32. Via het interne LEDC-peripheral worden 20 kHz PWM-signalen gegenereerd om hoogfrequente pieptonen in de motoren te elimineren. 
 
-Het doel van deze Proof of Concept is valideren dat:
-1. Beide motoren onafhankelijk van elkaar bidirectioneel (vooruit en achteruit) kunnen worden aangestuurd.
-2. De PWM-duty cycle de rotatiesnelheid lineair en betrouwbaar regelt.
-3. De slaapstand via de EEP-pin correct in- en uitgeschakeld kan worden.
+### Test
+1. Motor links vooruit/achteruit
+2. Motor rechts vooruit/achteruit
+3. Motor links van traag naar snel in 4 snelheden
+4. Motor rechts van traag naar snel in 4 snelheden
+5. Beide motoren vooruit/achteruit
