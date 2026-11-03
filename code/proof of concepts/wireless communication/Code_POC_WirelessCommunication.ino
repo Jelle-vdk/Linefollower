@@ -3,7 +3,7 @@
 #include <WebServer.h>
 
 //instellingen netwerk
-const char *ssid = "ESP32_Robot_Jelle";   //naam van het netwerk
+const char *ssid = "Linefollower_JVDK";   //naam van het netwerk
 const char *password = "ESP32_jelle";     //wachtwoord van het netwerk
 
 WebServer server(80);                     //maak de server aan op poort 80
