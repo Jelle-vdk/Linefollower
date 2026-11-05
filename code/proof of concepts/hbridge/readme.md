@@ -12,7 +12,9 @@ Voor de aansturing van de twee N20 motoren wordt gebruikgemaakt van de **DRV8833
 * **ULT (Fault):** Foutuitgang (active low, overstroom/oververhitting). Blijft voor de initiële test ongeadresseerd / zwevend.
 
 #### Implementatie & Testdoel
-De vier ingangen worden aangesloten op PWM-compatibele GPIO-pinnen van de ESP32. Via het interne LEDC-peripheral worden 20 kHz PWM-signalen gegenereerd om hoogfrequente pieptonen in de motoren te elimineren. 
+De vier ingangen worden aangesloten op PWM-compatibele GPIO-pinnen van de ESP32. Via `analogWriteFrequency()` worden 20kHz PWM-signalen gegenereerd om pieptonen te elimineren. 
+In de code wordt de EEP-pin via GPIO18 op HGIH gezet om de driver in te schakelen.
+De effectieve motorspanning vanuit het 2S-batterijpakket (7,4V - 8,4V) wordt via de PWM-duty-cycle softwarematig begrensd naar maximaal 6V.
 
 ### Test
 1. Motor links vooruit/achteruit
