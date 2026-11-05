@@ -15,7 +15,7 @@ Minimale hard- en software waarmee aangetoond wordt dat duplex kan gecommuniceer
 
 ### Gebruiksaanwijzing
 1. Schakel de ESP32 in.
-2. Maak met de smartphone of laptop verbinding met het Wi-Fi-netwerk `Robot-AP`.
+2. Maak met de smartphone of laptop verbinding met het Wi-Fi-netwerk `Linefollower_JVDK`.
 3. Open een browser en surf naar `http://192.168.4.1`.
 4. Gebruik de interface om de ingebouwde LED op de microcontroller aan en uit te zetten.
 
