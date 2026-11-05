@@ -1,4 +1,4 @@
-int sensorList[] = {35, 32, 33, 25, 26, 27, 14, 13};
+int sensorList[] = {36, 39, 34, 35, 32, 33};
 
 void setup(){
   for (int x: sensorList){
