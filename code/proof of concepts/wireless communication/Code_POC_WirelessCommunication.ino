@@ -14,15 +14,28 @@ const char HTML_PAGE[] =
 "<!DOCTYPE html><html>"
 "<head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
 "<style>"
-"body { font-family: Arial; text-align: center; margin-top: 50px; background: #220; color: white; }"
-".btn { padding: 15px 30px; font-size: 20xp; border: none; border-radius: 8xp; cursor: pointer; text-decoration: none; display: inline-block; margin: 10px; }"
+"body { font-family: Arial; text-align: center; margin-top: 50px; background: #0d1b2a; color: white; }"
+".btn { padding: 15px 30px; font-size: 20px; border: none; border-radius: 8px; cursor: pointer; text-decoration: none; display: inline-block; margin: 10px; }"
 ".btn-on { background-color: #28a745; color: white; }"
 ".btn-off { background-color: #dc3545; color: white; }"
 "</style></head>"
 "<body>"
 "<h1>ESP32 Besturing</h1>"
-"<p><a href=\"/led/on\"><button class=\"btn btn-on\">LED AAN</button></a></p>"
-"<p><a href=\"/led/off\"><button class=\"btn btn-off\">LED UIT</button></a></p>"
+"<p>LED Status: <span id=\"status\">Onbekend</span></p>"
+"<p>"
+"<button class=\"btn btn-on\" onclick=\"stuurStatus('on')\">LED AAN</button>"
+"<button class=\"btn btn-off\" onclick=\"stuurStatus('off')\">LED UIT</button>"
+"</p>"
+"<script>"
+"function updateUI(tekst) {"
+" document.getElementById('status').innerText = tekst;"
+"}"
+"function stuurStatus(actie) {"
+" fetch('/led/' + actie)"
+"   .then(res => res.text())"
+"   .then(data => updateUI(data));"
+"};"
+"</script>"
 "</body></html>";
 
 void handleRoot(){
@@ -31,14 +44,19 @@ void handleRoot(){
 
 void handleLedOn(){
   digitalWrite(ledPin, HIGH);
-  server.sendHeader("Location", "/");
-  server.send(303);
+  String status = digitalRead(ledPin) ? "AAN" : "UIT";
+  server.send(200, "text/plain", status);
 }
 
 void handleLedOff(){
   digitalWrite(ledPin, LOW);
-  server.sendHeader("Location", "/");
-  server.send(303);
+  String status = digitalRead(ledPin) ? "AAN" : "UIT";
+  server.send(200, "text/plain", status);
+}
+
+void handleStatus(){
+  String status = digitalRead(ledPin) ? "AAN" : "UIT";
+  server.send(200, "text/plain", status);
 }
 
 void setup(){
@@ -60,6 +78,7 @@ void setup(){
   server.on("/", handleRoot);
   server.on("/led/on", handleLedOn);
   server.on("/led/off", handleLedOff);
+  server.on("/led/status", handleStatus);
 
   //4. Server daadwerkelijk aanzetten
   server.begin();
