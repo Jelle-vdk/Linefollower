@@ -10,18 +10,22 @@ int versnellingen[] = {1, 2, 3, 4, 3, 2, 1};
 
 void setup(){
     pinMode(IN1, OUTPUT);
+    analogWriteFrequency(IN1, 20000);
     pinMode(IN2, OUTPUT);
+    analogWriteFrequency(IN2, 20000);
     pinMode(IN3, OUTPUT);
+    analogWriteFrequency(IN3, 20000);
     pinMode(IN4, OUTPUT);
+    analogWriteFrequency(IN4, 20000);
+
     pinMode(EEP, OUTPUT);
+    digitalWrite(EEP, HIGH);
 
     Serial.begin(9600);
 }
 
 void loop(){
   Serial.println("Begin Cyclus ----------------------");
-  digitalWrite(EEP, HIGH);
-
   Serial.println("Motor links vooruit");
   analogWrite(IN1, 200);
   analogWrite(IN2, 0);
