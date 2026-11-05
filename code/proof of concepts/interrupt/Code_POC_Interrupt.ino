@@ -1,5 +1,5 @@
-const int ledPin = 4;
-const int buttonPin = 18;
+const int ledPin = 27;
+const int buttonPin = 14;
 
 volatile bool running = false;
 volatile unsigned long lastTime = 0;
