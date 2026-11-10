@@ -16,12 +16,13 @@
 | 11 | Schakelaar | Tuimelschakelaar MT-113 | Nieuw | € 0,80 | 1 | € 0,80 |
 | 12 | Button | Drukknop | Recup | - | 1 | - |
 | 13 | LED | Standaard LED'jes | Recup | - | 3 | - |
-| 14 | Weerstand | 120 Ω | Recup | - | 3 | - |
-| 15 | Weerstand | 10 kΩ | Recup | - | 1 | - |
-| 16 | Kabels | Ø1.5mm verbindingsdraad | Recup | - | x | - |
-| 17 | Printplaat | Printplaat 80x120mm | Recup | - | 1 | - |
-| 18 | Pin-headers | Male Pin-headers | Nieuw | € 0,06 | 20 | € 1,25 |
-| 19 | Schroeven | M2 schroef | Recup | - | 6 | - |
-| 20 | Moeren | M2 Moer | Recup | - | 6 | - |
-| 21 | Afstandsbussen | M2 afstandbus | Recup | - | 4 | - |
+| 14 | Weerstand | 120 Ω | Recup | - | 2 | - |
+| 15 | Weerstand | 470 Ω | Recup | - | 1 | - |
+| 16 | Weerstand | 10 kΩ | Recup | - | 1 | - |
+| 17 | Kabels | Ø1.5mm verbindingsdraad | Recup | - | x | - |
+| 18 | Printplaat | Printplaat 80x120mm | Recup | - | 1 | - |
+| 19 | Pin-headers | Male Pin-headers | Nieuw | € 0,06 | 20 | € 1,25 |
+| 20 | Schroeven | M2 schroef | Recup | - | 6 | - |
+| 21 | Moeren | M2 Moer | Recup | - | 6 | - |
+| 22 | Afstandsbussen | M2 afstandbus | Recup | - | 4 | - |
 | **Totaal** | | | | | | **€ 68,05** |
