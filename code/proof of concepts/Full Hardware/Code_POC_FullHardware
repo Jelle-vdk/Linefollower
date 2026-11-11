@@ -1,0 +1,515 @@
+//bibliotheken importeren
+#include <WiFi.h>
+#include <WebServer.h>
+
+//instellingen netwerk
+const char *ssid = "Linefollower_JVDK";
+const char *password = "ESP32_jelle";
+
+WebServer server(80);
+
+//pinnen van de microcontroller
+const int H_EEP = 18;
+const int H_IN1 = 19;
+const int H_IN2 = 21;
+const int H_IN3 = 22;
+const int H_IN4 = 23;
+
+const int Btn_Run = 14;
+const int LED_Run = 27;
+const int LED_Wifi = 26;
+
+const int sensorList[] = {36, 39, 34, 35, 32, 33};
+
+//HTML-code voor de webpagina
+const char HTML_PAGE[] PROGMEM=
+R"rawliteral(
+    <!DOCTYPE html>
+    <html lang="nl">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Linefollower TEST</title>
+        
+        <style>
+            body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f0f2f5;
+            color: #333;
+            }
+
+            h1, h2, h3 {
+            text-align: center;
+            margin-top: 5px;
+            }
+
+            /* Bovenste container voor Motoren en LEDs naast elkaar */
+            .top-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 20px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            }
+
+            .card {
+            background: white;
+            border: 2px solid #333;
+            border-radius: 8px;
+            padding: 15px;
+            flex: 1;
+            min-width: 320px;
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+            }
+
+            .motors-row, .leds-row {
+            display: flex;
+            justify-content: space-around;
+            gap: 15px;
+            }
+
+            .motor-unit {
+            text-align: center;
+            border: 1px dashed #aaa;
+            padding: 10px;
+            border-radius: 6px;
+            flex: 1;
+            }
+
+            .btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border: 2px solid #333;
+            border-radius: 6px;
+            cursor: pointer;
+            background-color: #e0e0e0;
+            margin-bottom: 8px;
+            }
+
+            .btn.active {
+            background-color: #28a745;
+            color: white;
+            border-color: #1e7e34;
+            }
+
+            .slider-container {
+            margin: 10px 0;
+            }
+
+            .dir-container {
+            text-align: left;
+            display: inline-block;
+            margin-top: 5px;
+            }
+
+            .btn-status-box {
+            margin-top: 25px;
+            text-align: center;
+            }
+
+            .status-indicator {
+            display: inline-block;
+            padding: 10px 25px;
+            background-color: #eee;
+            border: 2px solid #888;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 18px;
+            }
+
+            .status-indicator.pressed {
+            background-color: #ffc107;
+            border-color: #d39e00;
+            }
+
+            /* Onderste blok voor sensoren */
+            #sensors-box {
+            background: white;
+            border: 2px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+            }
+
+            .sensors-grid {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            height: 250px;
+            padding: 10px 0;
+            margin-top: 10px;
+            }
+
+            .sensor-col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 45px;
+            height: 100%;
+            }
+
+            .sensor-val {
+            font-family: monospace;
+            font-size: 14px;
+            margin-bottom: 6px;
+            }
+
+            .bar-container-vertical {
+            width: 28px;
+            flex: 1;
+            background-color: #e9ecef;
+            border: 1px solid #333;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            overflow: hidden;
+            }
+
+            .bar-fill-vertical {
+            width: 100%;
+            height: 0%;
+            background-color: #28a745;
+            transition: height 0.1s ease;
+            }
+
+            .sensor-lbl {
+            font-weight: bold;
+            margin-top: 8px;
+            }
+        </style>
+    </head>
+    <body>
+
+        <h1>Linefollower TEST</h1>
+
+        <div class="top-container">
+
+            <!-- MOTOREN -->
+            <div class="card">
+            <h2>Motoren</h2>
+            <div class="motors-row">
+                
+                <!-- Motor 1 -->
+                <div id="motor1-box" class="motor-unit">
+                <button id="btn-m1" class="btn" onclick="toggleMotor(1)">M1</button>
+                <div class="slider-container">
+                    <span>0%</span>
+                    <input type="range" id="speed-m1" min="0" max="100" value="0" oninput="updateSpeed(1)">
+                    <span>100%</span>
+                </div>
+                <div>Snelheid: <span id="val-speed-m1">0</span>%</div>
+                <div class="dir-container">
+                    <label><input type="radio" name="dir-m1" value="fwd" checked onchange="updateDir(1)"> Vooruit</label><br>
+                    <label><input type="radio" name="dir-m1" value="rev" onchange="updateDir(1)"> Achteruit</label>
+                </div>
+                </div>
+
+                <!-- Motor 2 -->
+                <div id="motor2-box" class="motor-unit">
+                <button id="btn-m2" class="btn" onclick="toggleMotor(2)">M2</button>
+                <div class="slider-container">
+                    <span>0%</span>
+                    <input type="range" id="speed-m2" min="0" max="100" value="0" oninput="updateSpeed(2)">
+                    <span>100%</span>
+                </div>
+                <div>Snelheid: <span id="val-speed-m2">0</span>%</div>
+                <div class="dir-container">
+                    <label><input type="radio" name="dir-m2" value="fwd" checked onchange="updateDir(2)"> Vooruit</label><br>
+                    <label><input type="radio" name="dir-m2" value="rev" onchange="updateDir(2)"> Achteruit</label>
+                </div>
+                </div>
+
+            </div>
+            </div>
+
+            <!-- LEDS & BUTTON -->
+            <div class="card" id="leds-button-box">
+            <h2>Status & Knoppen</h2>
+            <div class="leds-row">
+                <div>
+                <button id="btn-led1" class="btn" onclick="toggleLed(1)">LED 1</button>
+                <p>Status: <span id="status-led1">UIT</span></p>
+                </div>
+                <div>
+                <button id="btn-led2" class="btn" onclick="toggleLed(2)">LED 2</button>
+                <p>Status: <span id="status-led2">UIT</span></p>
+                </div>
+            </div>
+
+            <div class="btn-status-box">
+                <h3>Button status:</h3>
+                <div id="status-button" class="status-indicator">OPEN</div>
+            </div>
+            </div>
+
+        </div>
+
+        <!-- SENSOREN (S1 t/m S6) -->
+        <div id="sensors-box">
+            <h2>Sensoren (QTR-8A)</h2>
+
+            <div class="sensors-grid">
+            <div class="sensor-col">
+                <span id="val-s1" class="sensor-val">0</span>
+                <div class="bar-container-vertical"><div id="bar-s1" class="bar-fill-vertical"></div></div>
+                <span class="sensor-lbl">S1</span>
+            </div>
+
+            <div class="sensor-col">
+                <span id="val-s2" class="sensor-val">0</span>
+                <div class="bar-container-vertical"><div id="bar-s2" class="bar-fill-vertical"></div></div>
+                <span class="sensor-lbl">S2</span>
+            </div>
+
+            <div class="sensor-col">
+                <span id="val-s3" class="sensor-val">0</span>
+                <div class="bar-container-vertical"><div id="bar-s3" class="bar-fill-vertical"></div></div>
+                <span class="sensor-lbl">S3</span>
+            </div>
+
+            <div class="sensor-col">
+                <span id="val-s4" class="sensor-val">0</span>
+                <div class="bar-container-vertical"><div id="bar-s4" class="bar-fill-vertical"></div></div>
+                <span class="sensor-lbl">S4</span>
+            </div>
+
+            <div class="sensor-col">
+                <span id="val-s5" class="sensor-val">0</span>
+                <div class="bar-container-vertical"><div id="bar-s5" class="bar-fill-vertical"></div></div>
+                <span class="sensor-lbl">S5</span>
+            </div>
+
+            <div class="sensor-col">
+                <span id="val-s6" class="sensor-val">0</span>
+                <div class="bar-container-vertical"><div id="bar-s6" class="bar-fill-vertical"></div></div>
+                <span class="sensor-lbl">S6</span>
+            </div>
+            </div>
+
+            <p style="text-align: center; color: #666; margin-top: 15px;">Schaal: 0 (leeg) tot 4095 (vol)</p>
+        </div>
+
+        <!-- JAVASCRIPT COMMUNICATIE & BEDIENING -->
+        <script>
+            // Lokale statussen bijhouden
+            let m1Running = false;
+            let m2Running = false;
+            let led1State = false;
+            let led2State = false;
+
+            // Snelheidstekst updaten
+            function updateSpeed(motorNr) {
+            const val = document.getElementById('speed-m' + motorNr).value;
+            document.getElementById('val-speed-m' + motorNr).innerText = val;
+            stuurMotorCommando(motorNr);
+            }
+
+            // Richting updaten
+            function updateDir(motorNr) {
+            stuurMotorCommando(motorNr);
+            }
+
+            // Motor aan/uit toggelen
+            function toggleMotor(motorNr) {
+            if (motorNr === 1) {
+                m1Running = !m1Running;
+                document.getElementById('btn-m1').classList.toggle('active', m1Running);
+            } else {
+                m2Running = !m2Running;
+                document.getElementById('btn-m2').classList.toggle('active', m2Running);
+            }
+            stuurMotorCommando(motorNr);
+            }
+
+            function stuurMotorCommando(motorNr) {
+            const isRunning = (motorNr === 1) ? m1Running : m2Running;
+            const speed = document.getElementById('speed-m' + motorNr).value;
+            const dir = document.querySelector('input[name="dir-m' + motorNr + '"]:checked').value;
+            
+            // Stuurt bv: /motor?nr=1&run=1&speed=80&dir=fwd
+            fetch(`/motor?nr=${motorNr}&run=${isRunning ? 1 : 0}&speed=${speed}&dir=${dir}`)
+                .catch(err => console.log('ESP nog niet verbonden'));
+            }
+
+            // LEDs schakelen
+            function toggleLed(ledNr) {
+            if (ledNr === 1) {
+                led1State = !led1State;
+                document.getElementById('btn-led1').classList.toggle('active', led1State);
+                document.getElementById('status-led1').innerText = led1State ? 'AAN' : 'UIT';
+                fetch(`/led?nr=1&state=${led1State ? 1 : 0}`).catch(() => {});
+            } else {
+                led2State = !led2State;
+                document.getElementById('btn-led2').classList.toggle('active', led2State);
+                document.getElementById('status-led2').innerText = led2State ? 'AAN' : 'UIT';
+                fetch(`/led?nr=2&state=${led2State ? 1 : 0}`).catch(() => {});
+            }
+            }
+
+            // Continue polling voor sensoren en drukknop (elke 150 ms)
+            setInterval(() => {
+            fetch('/status')
+                .then(res => res.json())
+                .then(data => {
+                // data verwacht in JSON formaat: { btn: 0/1, s: [val1, val2, val3, val4, val5, val6] }
+                
+                // Knopstatus bijwerken
+                const btnElem = document.getElementById('status-button');
+                if (data.btn === 1) {
+                    btnElem.innerText = 'INGEDRUKT';
+                    btnElem.classList.add('pressed');
+                } else {
+                    btnElem.innerText = 'OPEN';
+                    btnElem.classList.remove('pressed');
+                }
+
+                // Sensoren en verticale balken bijwerken (0 - 4095 schalen naar 0% - 100%)
+                for (let i = 0; i < 6; i++) {
+                    const val = data.s[i];
+                    const pct = Math.min(100, Math.max(0, (val / 4095) * 100));
+                    document.getElementById(`val-s${i+1}`).innerText = val;
+                    document.getElementById(`bar-s${i+1}`).style.height = pct + '%';
+                }
+                })
+                .catch(() => {
+                // Rustig negeren als er lokaal in de browser getest wordt zonder ESP
+                });
+            }, 150);
+        </script>
+
+    </body>
+    </html>
+)rawliteral";
+
+// 1. De webpagina serveren
+void handleRoot() {
+  server.send(200, "text/html", HTML_PAGE);
+}
+
+// 2. Behandelt M1 én M2 via de parameters ?nr=, ?run=, ?speed=, ?dir=
+void handleMotor() {
+  int nr = server.arg("nr").toInt();        // 1 of 2
+  int run = server.arg("run").toInt();      // 1 (aan) of 0 (uit)
+  int speed = server.arg("speed").toInt();  // 0 tot 100 (%)
+  String dir = server.arg("dir");           // "fwd" of "rev"
+
+  // 1. Reken het percentage (0-100) om naar 8-bit PWM (0-255)
+  int pwmVal = 0;
+  if (run == 1) {
+    pwmVal = map(speed, 0, 100, 0, 255);
+  }
+
+  // 2. Stuur de juiste pinnen van de DRV8833 aan
+  if (nr == 1) {
+    // MOTOR 1 (H_IN1 & H_IN2)
+    if (run == 0 || pwmVal == 0) {
+      ledcWrite(H_IN1, 0);
+      ledcWrite(H_IN2, 0);
+    } else if (dir == "fwd") {
+      ledcWrite(H_IN1, pwmVal);
+      ledcWrite(H_IN2, 0);
+    } else if (dir == "rev") {
+      ledcWrite(H_IN1, 0);
+      ledcWrite(H_IN2, pwmVal);
+    }
+  } 
+  else if (nr == 2) {
+    // MOTOR 2 (H_IN3 & H_IN4)
+    if (run == 0 || pwmVal == 0) {
+      ledcWrite(H_IN3, 0);
+      ledcWrite(H_IN4, 0);
+    } else if (dir == "fwd") {
+      ledcWrite(H_IN3, pwmVal);
+      ledcWrite(H_IN4, 0);
+    } else if (dir == "rev") {
+      ledcWrite(H_IN3, 0);
+      ledcWrite(H_IN4, pwmVal);
+    }
+  }
+
+  // 3. Pas op het allerlaatst meld je aan de browser dat de opdracht klaar is
+  server.send(200, "text/plain", "OK");
+}
+
+// 3. Behandelt LED 1 én LED 2 via de parameters ?nr=, ?state=
+void handleLed() {
+  int nr = server.arg("nr").toInt();
+  int state = server.arg("state").toInt();
+
+  // Hier sturen we zo meteen LED_Run of LED_Wifi aan
+  if (nr == 1) {
+    digitalWrite(LED_Run, state);
+  } else if (nr == 2) {
+    digitalWrite(LED_Wifi, state);
+  }
+
+  server.send(200, "text/plain", "OK");
+}
+
+// 4. Bundelt alle sensoren + de knopstatus in één JSON-berichtje
+void handleStatus() {
+  int btnVal = digitalRead(Btn_Run) == HIGH? 1 : 0; // HIGH bij indrukken (pull-down)
+
+  // Bouw JSON: {"btn": 0, "s": [120, 340, 4000, 3900, 200, 100]}
+  String json = "{\"btn\":";
+  json += btnVal;
+  json += ",\"s\":[";
+  for (int i = 0; i < 6; i++) {
+    json += analogRead(sensorList[i]);
+    if (i < 5) json += ",";
+  }
+  json += "]}";
+
+  server.send(200, "application/json", json);
+}
+
+
+void setup(){
+    //hardware instellen
+    pinMode(H_EEP, OUTPUT);
+    digitalWrite(H_EEP, HIGH);
+
+    ledcAttach(H_IN1, 20000, 8);
+    ledcAttach(H_IN2, 20000, 8);
+    ledcAttach(H_IN3, 20000, 8);
+    ledcAttach(H_IN4, 20000, 8);
+    ledcWrite(H_IN1, 0);
+    ledcWrite(H_IN2, 0);
+    ledcWrite(H_IN3, 0);
+    ledcWrite(H_IN4, 0);
+
+    pinMode(LED_Run, OUTPUT);
+    digitalWrite(LED_Run, LOW);
+    pinMode(LED_Wifi, OUTPUT);
+    digitalWrite(LED_Wifi, LOW);
+
+    pinMode(Btn_Run, INPUT);
+    for (int pin: sensorList){
+        pinMode(pin, INPUT);
+    }
+
+    //Wi-Fi instellen
+    WiFi.softAP(ssid, password);
+
+    //koppeling URL's
+    server.on("/", handleRoot);
+    server.on("/motor", handleMotor);
+    server.on("/led", handleLed);
+    server.on("/status", handleStatus);
+
+    //server starten
+    server.begin();
+}
+
+
+void loop(){
+    server.handleClient();
+}
