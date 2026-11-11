@@ -13,7 +13,7 @@ Voor de aansturing van de twee N20 motoren wordt gebruikgemaakt van de **DRV8833
 
 #### Implementatie & Testdoel
 De vier ingangen worden aangesloten op PWM-compatibele GPIO-pinnen van de ESP32. Via `analogWriteFrequency()` worden 20kHz PWM-signalen gegenereerd om pieptonen te elimineren. 
-In de code wordt de EEP-pin via GPIO18 op HGIH gezet om de driver in te schakelen.
+In de code wordt de EEP-pin via GPIO18 op HIGH gezet om de driver in te schakelen.
 De effectieve motorspanning vanuit het 2S-batterijpakket (7,4V - 8,4V) wordt via de PWM-duty-cycle softwarematig begrensd naar maximaal 6V.
 
 ### Test
