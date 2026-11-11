@@ -16,7 +16,7 @@
 | 11 | Schakelaar | Tuimelschakelaar MT-113 | Nieuw | € 0,80 | 1 | € 0,80 |
 | 12 | Button | Drukknop | Recup | - | 1 | - |
 | 13 | LED | Standaard LED'jes | Recup | - | 3 | - |
-| 14 | Weerstand | 120 Ω | Recup | - | 2 | - |
+| 14 | Weerstand | 150 Ω | Recup | - | 2 | - |
 | 15 | Weerstand | 470 Ω | Recup | - | 1 | - |
 | 16 | Weerstand | 10 kΩ | Recup | - | 1 | - |
 | 17 | Kabels | Ø1.5mm verbindingsdraad | Recup | - | x | - |
