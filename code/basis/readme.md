@@ -9,4 +9,8 @@ volgende zaken werken samen in dit template project
 * parameters worden opgeslagen in eeprom geheugen
 * run/stop kan ook geactiveerd worden mbv. een externe interrupt
 
-Met behulp van de cyclus kan je bvb. een knipperende led programmeren.
+de EEPROM en SerialCommand zitten in aparte bibliotheken,
+maar ook de cyclus zit in een aparte bibliotheek.
+Deze word dan uit het hoofdprogramma steeds aangeroepen als het actief is.
+
+! de seriele commando's kunnen wel altijd gebruikt worden.
