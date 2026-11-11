@@ -1,4 +1,4 @@
-# POC: Systeemintegratie & Web Dashboard
+# POC: Full Hardware test & Web aansturing
 
 Proof of Concept waarin de ESP32 als Wi-Fi Access Point fungeert om alle inputs en outputs van de linefollower draadloos via een webpagina te testen en te monitoren.
 
@@ -41,10 +41,3 @@ Aantonen dat alle hardwarecomponenten tegelijkertijd en zonder interferentie dra
    * **SSID:** `Linefollower_JVDK`
    * **Wachtwoord:** `ESP32_jelle`
 3. Open de browser en surf naar: `http://192.168.4.1`
-
----
-
-## Status & Conclusie
-* **Resultaat:** Geslaagd. Bidirectionele communicatie via Wi-Fi werkt stabiel; motoren, sensoren en indicatoren reageren direct.
-* **Aandachtspunt:** Motoren starten mechanisch pas vanaf ~40% PWM (op te vangen met software deadband-compensatie in de PID-fase).
-* **Volgende stap:** Hardware definitief solderen, sensor-kalibratielogica implementeren en het PID-lijnvolgalgoritme bouwen.
