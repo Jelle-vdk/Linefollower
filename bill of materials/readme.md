@@ -1,4 +1,4 @@
-## bill of materials
+## Bill of Materials
 <br />
 
 | Volgnummer | Naam | Omschrijving | Nieuw/recup | Kostprijs/stuk | Aantal | Subtotaal |
@@ -19,10 +19,11 @@
 | 14 | Weerstand | 150 Ω | Recup | - | 2 | - |
 | 15 | Weerstand | 470 Ω | Recup | - | 1 | - |
 | 16 | Weerstand | 10 kΩ | Recup | - | 1 | - |
-| 17 | Kabels | Ø1.5mm verbindingsdraad | Recup | - | x | - |
-| 18 | Printplaat | Printplaat 80x120mm | Recup | - | 1 | - |
-| 19 | Pin-headers | Male Pin-headers | Nieuw | € 0,06 | 20 | € 1,25 |
-| 20 | Schroeven | M2 schroef | Recup | - | 6 | - |
-| 21 | Moeren | M2 Moer | Recup | - | 6 | - |
-| 22 | Afstandsbussen | M2 afstandbus | Recup | - | 4 | - |
+| 17 | Condensator | Philips elektrolytische condensator 4,7 µF - 385 V | Recup | - | 1 | - |
+| 18 | Kabels | Ø1.5mm verbindingsdraad | Recup | - | x | - |
+| 19 | Printplaat | Printplaat 80x120mm | Recup | - | 1 | - |
+| 20 | Pin-headers | Male Pin-headers | Nieuw | € 0,06 | 20 | € 1,25 |
+| 21 | Schroeven | M2 schroef | Recup | - | 6 | - |
+| 22 | Moeren | M2 Moer | Recup | - | 6 | - |
+| 23 | Afstandsbussen | M2 afstandbus | Recup | - | 4 | - |
 | **Totaal** | | | | | | **€ 68,05** |
