@@ -19,7 +19,7 @@
 | 14 | Weerstand | 150 Ω | Recup | - | 2 | - |
 | 15 | Weerstand | 470 Ω | Recup | - | 1 | - |
 | 16 | Weerstand | 10 kΩ | Recup | - | 1 | - |
-| 17 | Condensator | Philips elektrolytische condensator 4,7 µF - 385 V | Recup | - | 1 | - |
+| 17 | Condensator | Philips axiale elektrolytische condensator 47 µF - 385 V | Recup | - | 1 | - |
 | 18 | Kabels | Ø1.5mm verbindingsdraad | Recup | - | x | - |
 | 19 | Printplaat | Printplaat 80x120mm | Recup | - | 1 | - |
 | 20 | Pin-headers | Male Pin-headers | Nieuw | € 0,06 | 20 | € 1,25 |
